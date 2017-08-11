@@ -40,7 +40,7 @@ public class ActionKeywords {
 				break;
 
 			default:
-				Log.warn("Browser name not match");
+				//Log.warn("Browser name not match");
 				break;
 			}
 
@@ -49,23 +49,21 @@ public class ActionKeywords {
 			//driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-			Log.info("Action......Opening the browser");
+			//Log.info("Action......Opening the browser");
 			
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|openBrowser. Exception Message - "
-					+ e.getMessage());
+			//Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|openBrowser. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
 
 	public void tryClick(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Clicking on ObjectLocator " + sObjectLocator);
+			//Log.info("Action......Clicking on ObjectLocator " + sObjectLocator);
 			//driver.findElement(By.cssSelector(sObjectLocator)).click();
 			driver.findElement(By.xpath(sObjectLocator)).click();
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - "
-					+ e.getMessage());
+			//Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 
@@ -73,24 +71,22 @@ public class ActionKeywords {
 
 	public void tryInput(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Input the text into ObjectLocator " + sObjectLocator);
+			//Log.info("Action......Input the text into ObjectLocator " + sObjectLocator);
 			//driver.findElement(By.cssSelector(sObjectLocator)).sendKeys(sTestData);
 			driver.findElement(By.xpath(sObjectLocator)).sendKeys(sTestData);
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryInput. Exception Message - "
-					+ e.getMessage());
+			//Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryInput. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
 
 	public void tryClose(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Closing the browser");
+			//Log.info("Action......Closing the browser");
 			driver.close();
 			//driver.quit();
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClose. Exception Message - "
-					+ e.getMessage());
+			//Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClose. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		// System.exit(0);
@@ -99,20 +95,19 @@ public class ActionKeywords {
 	public void tryVerify (String sObjectLocator, String sActionKeyword, String sTestData) {
 		
 		try {
-			Log.info("Action......Try Verify text");
+			//Log.info("Action......Try Verify text");
 			DriverScript.sCompareText = driver.findElement(By.xpath(sObjectLocator)).getText();
 			// if(DriverScript.sCompareText.equals(sTestData)){ 
 			if(DriverScript.sCompareText.equalsIgnoreCase(sTestData)) {
-				Log.info("Text verified");
+				//Log.info("Text verified");
 			}else {
 				DriverScript.bResult = false;
-				Log.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
-				Log.info("Text not the same");
+				//Log.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
+				//Log.info("Text not the same");
 			}
 			
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryVerify. Exception Message - "
-					+ e.getMessage());
+			//Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryVerify. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
