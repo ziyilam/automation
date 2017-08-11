@@ -1,7 +1,7 @@
 /.metadata/
 /.recommenders/
 */bin/
-# *.xlsx
+*.xlsx
 
 # BlueJ files
 *.ctxt
