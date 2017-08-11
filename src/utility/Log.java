@@ -1,25 +1,26 @@
 package utility;
 
 import java.util.ArrayList;
-
-//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Log {
-
-	/*private static Logger Log = Logger.getLogger(Log.class.getName());
+	private static final Logger Log = LogManager.getLogger(Log.class.getName());
 
 	public static void startTestCase(String sTestCaseName) {
 
 		Log.info("----------------------------------------------------------------------------------------");
 		Log.info("----------------------------------------------------------------------------------------");
-		Log.info("-------------------             " + sTestCaseName + " TestStep begins                -------------------");
+		Log.info("-------------------             " + sTestCaseName
+				+ " TestStep begins                -------------------");
 		Log.info("----------------------------------------------------------------------------------------");
 		Log.info("----------------------------------------------------------------------------------------");
 
 	}
 
 	public static void endTestCase(String sTestCaseName) {
-		Log.info("--------------------------------TestCase "+sTestCaseName+" Ended"+"------------------------------------");
+		Log.info("--------------------------------TestCase " + sTestCaseName + " Ended"
+				+ "------------------------------------");
 		Log.info("-");
 		Log.info("-");
 		Log.info("-");
@@ -49,11 +50,11 @@ public class Log {
 
 	public static void info(ArrayList<String> message) {
 		Log.info(message);
-		
+
 	}
 
 	public static void info(int message) {
 		Log.info(message);
-		
-	}*/
+
+	}
 }

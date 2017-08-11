@@ -47,5 +47,19 @@
 	<classpathentry kind="lib" path="C:/Sel-lib/selenium-java-3.4.0/lib/xalan-2.7.2.jar"/>
 	<classpathentry kind="lib" path="C:/Sel-lib/selenium-java-3.4.0/lib/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="C:/Sel-lib/selenium-java-3.4.0/lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-1.2-api-2.8.2.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-1.2-api-2.8.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-1.2-api-2.8.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-2.8.2.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-2.8.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-2.8.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-scala_2.10-2.8.2.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-scala_2.10-2.8.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-scala_2.11-2.8.2.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-api-scala_2.11-2.8.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-core-2.8.2.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-core-2.8.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-core-2.8.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Sel-lib/apache-log4j-2.8.2-bin/log4j-core-2.8.2-tests.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

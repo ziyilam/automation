@@ -3,12 +3,10 @@ package utility;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-//import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-//import config.ActionKeywords;
 import config.Constants;
 import executionEngine.DriverScript;
 
@@ -23,7 +21,7 @@ public class ExcelUtils {
 			FileInputStream ExcelFile = new FileInputStream(Path);
 			ExcelWBook = new XSSFWorkbook(ExcelFile);
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|setExcelFile. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|setExcelFile. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 
@@ -37,8 +35,8 @@ public class ExcelUtils {
 			return CellData;
 
 		} catch (Exception e) {
-			//Log.warn("No Cell Data is found and return empty cell");
-			// DriverScript.bResult = false;
+			Log.warn("No Cell Data is found and return empty cell");
+
 			return "";
 		}
 	}
@@ -49,7 +47,7 @@ public class ExcelUtils {
 			ExcelWSheet = ExcelWBook.getSheet(SheetName);
 			iNumber = ExcelWSheet.getLastRowNum();
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|getRowCount. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|getRowCount. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		return iNumber;
@@ -65,7 +63,7 @@ public class ExcelUtils {
 				}
 			}
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|getRowContains. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|getRowContains. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		return iRowNum;
@@ -81,7 +79,7 @@ public class ExcelUtils {
 				}
 			}
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|getTestStepsCount. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|getTestStepsCount. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		return i - 1;
@@ -94,7 +92,7 @@ public class ExcelUtils {
 			colCount = ExcelWSheet.getRow(rowNum).getLastCellNum();
 
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|getColCount. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|getColCount. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		return colCount;
@@ -116,9 +114,10 @@ public class ExcelUtils {
 			ExcelWBook.write(fileOut);
 			fileOut.close();
 			ExcelWBook = new XSSFWorkbook(new FileInputStream(Constants.Path_TestData));
-			//Log.info("Test result: " + sResult + " written successfully on: " + sSheetName + " of " + Constants.File_TestData);
+			Log.info("Test result: " + sResult + " written successfully on: " + sSheetName + " of "
+					+ Constants.File_TestData);
 		} catch (Exception e) {
-			//Log.error("ExcelUtils|setCellData. Exception Message - " + e.getMessage());
+			Log.error("ExcelUtils|setCellData. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
