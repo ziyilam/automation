@@ -1,7 +1,7 @@
 /.metadata/
 /.recommenders/
 */bin/
-*.xlsx
+# *.xlsx
 
 # BlueJ files
 *.ctxt
@@ -18,7 +18,7 @@ hs_err_pid*
 *.com
 *.class
 *.dll
-*.exe
+# *.exe
 *.o
 *.so
 
@@ -30,7 +30,7 @@ hs_err_pid*
 *.dmg
 *.gz
 *.iso
-*.jar
+# *.jar
 *.rar
 *.tar
 *.zip
@@ -53,3 +53,4 @@ hs_err_pid*
 .Trashes
 ehthumbs.db
 Thumbs.db
+/bin/
