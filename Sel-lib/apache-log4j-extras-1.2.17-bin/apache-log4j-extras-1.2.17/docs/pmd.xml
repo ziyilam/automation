@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.3" timestamp="2013-10-14T12:35:21.818">
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/db/CustomSQLDBReceiver.java">
+<violation beginline="199" endline="201" begincolumn="15" endcolumn="13" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db" class="CustomSQLDBReceiver" method="closeConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="397" endline="398" begincolumn="35" endcolumn="33" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db" class="CustomSQLDBReceiver$CustomReceiverJob" method="execute" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/db/DBHelper.java">
+<violation beginline="53" endline="56" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db" class="DBHelper" method="closeConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="64" endline="65" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db" class="DBHelper" method="closeStatement" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/db/DBReceiverJob.java">
+<violation beginline="158" endline="160" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db" class="DBReceiverJob" method="closeConnection" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/db/dialect/Util.java">
+<violation beginline="60" endline="62" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.db.dialect" class="Util" method="discoverSQLDialect" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/JMSReceiver.java">
+<violation beginline="233" endline="235" begincolumn="13" endcolumn="11" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="JMSReceiver" method="activateOptions" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="253" endline="255" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="JMSReceiver" method="shutdown" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/JMSReceiverBeanInfo.java">
+<violation beginline="47" endline="48" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="JMSReceiverBeanInfo" method="getPropertyDescriptors" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/MulticastReceiver.java">
+<violation beginline="264" endline="266" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="MulticastReceiver$MulticastReceiverThread" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/MulticastReceiverBeanInfo.java">
+<violation beginline="46" endline="47" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="MulticastReceiverBeanInfo" method="getPropertyDescriptors" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/SocketNode13.java">
+<violation beginline="199" endline="201" begincolumn="18" endcolumn="11" rule="EmptyIfStmt" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="SocketNode13" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyIfStmt" priority="3">
+Avoid empty if statements
+</violation>
+<violation beginline="224" endline="226" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="SocketNode13" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/SocketReceiver.java">
+<violation beginline="208" endline="210" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="SocketReceiver" method="closeServerSocket" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="222" endline="224" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="SocketReceiver" method="closeAllAcceptedSockets" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/UDPReceiver.java">
+<violation beginline="272" endline="274" begincolumn="11" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="UDPReceiver$UDPReceiverThread" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/XMLSocketNode.java">
+<violation beginline="199" endline="201" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="XMLSocketNode" method="run" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/XMLSocketReceiver.java">
+<violation beginline="222" endline="224" begincolumn="10" endcolumn="8" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="XMLSocketReceiver" method="closeServerSocket" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="236" endline="238" begincolumn="12" endcolumn="10" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.net" class="XMLSocketReceiver" method="closeAllAcceptedSockets" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/varia/LogFilePatternReceiver.java">
+<violation beginline="202" endline="204" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="492" endline="494" begincolumn="21" endcolumn="21" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="process" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="512" endline="514" begincolumn="29" endcolumn="29" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="process" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="530" endline="532" begincolumn="13" endcolumn="13" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="process" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="548" endline="550" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="passesExpression" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="660" endline="660" begincolumn="109" endcolumn="117" rule="UnnecessaryConversionTemporary" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="initialize" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#UnnecessaryConversionTemporary" priority="3">
+Avoid unnecessary temporaries when converting primitives to Strings
+</violation>
+<violation beginline="681" endline="681" begincolumn="96" endcolumn="104" rule="UnnecessaryConversionTemporary" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="initialize" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#UnnecessaryConversionTemporary" priority="3">
+Avoid unnecessary temporaries when converting primitives to Strings
+</violation>
+<violation beginline="897" endline="902" begincolumn="17" endcolumn="17" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiver" method="convertToEvent" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/varia/LogFilePatternReceiverBeanInfo.java">
+<violation beginline="48" endline="49" begincolumn="7" endcolumn="5" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.log4j.receivers.varia" class="LogFilePatternReceiverBeanInfo" method="getPropertyDescriptors" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/LogFileXMLReceiver.java">
+<violation beginline="149" endline="151" begincolumn="13" endcolumn="13" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.log4j.receivers.xml" class="LogFileXMLReceiver" method="passesExpression" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+</pmd>

@@ -1,0 +1,1231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd-cpd>
+<duplication lines="393" tokens="1551">
+<file line="100" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/extras/XSLTLayout.java"/>
+<file line="96" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/xml/XSLTLayout.java"/>
+<codefragment>
+<![CDATA[
+        implements org.apache.log4j.xml.UnrecognizedElementHandler {
+    /**
+     * Namespace for XSLT.
+     */
+    private static final String XSLT_NS = "http://www.w3.org/1999/XSL/Transform";
+    /**
+     * Namespace for log4j events.
+     */
+    private static final String LOG4J_NS = "http://jakarta.apache.org/log4j/";
+    /**
+     * Whether location information should be written.
+     */
+    private boolean locationInfo = false;
+    /**
+     * media-type (mime type) extracted from XSLT transform.
+     */
+    private String mediaType = "text/plain";
+    /**
+     * Encoding extracted from XSLT transform.
+     */
+    private Charset encoding;
+    /**
+     * Transformer factory.
+     */
+    private SAXTransformerFactory transformerFactory;
+    /**
+     * XSLT templates.
+     */
+    private Templates templates;
+    /**
+     * Output stream.
+     */
+    private final ByteArrayOutputStream outputStream;
+    /**
+     * Whether throwable information should be ignored.
+     */
+    private boolean ignoresThrowable = false;
+    /**
+     * Whether properties should be extracted.
+     */
+    private boolean properties = true;
+    /**
+     * Whether activateOptions has been called.
+     */
+    private boolean activated = false;
+
+    /**
+     * DateFormat for UTC time.
+     */
+    private final CachedDateFormat utcDateFormat;
+
+    /**
+     * Default constructor.
+     *
+     */
+    public XSLTLayout() {
+        outputStream = new ByteArrayOutputStream();
+        transformerFactory = (SAXTransformerFactory)
+                TransformerFactory.newInstance();
+
+        SimpleDateFormat zdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        zdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        utcDateFormat = new CachedDateFormat(zdf, 1000);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized String getContentType() {
+        return mediaType;
+    }
+
+    /**
+     * The <b>LocationInfo </b> option takes a boolean value. By default, it is
+     * set to false which means there will be no location information output by
+     * this layout. If the the option is set to true, then the file name and line
+     * number of the statement at the origin of the log statement will be output.
+     *
+     * <p>
+     * If you are embedding this layout within an {@link
+     * org.apache.log4j.net.SMTPAppender} then make sure to set the
+     * <b>LocationInfo </b> option of that appender as well.
+     *
+     * @param flag new value.
+     */
+    public synchronized void setLocationInfo(final boolean flag) {
+      locationInfo = flag;
+    }
+
+    /**
+     * Gets whether location info should be output.
+     * @return if location is output.
+     */
+    public synchronized boolean getLocationInfo() {
+      return locationInfo;
+    }
+
+    /**
+     * Sets whether MDC key-value pairs should be output, default false.
+     * @param flag new value.
+     */
+    public synchronized void setProperties(final boolean flag) {
+      properties = flag;
+    }
+
+    /**
+     * Gets whether MDC key-value pairs should be output.
+     * @return true if MDC key-value pairs are output.
+     */
+    public synchronized boolean getProperties() {
+      return properties;
+    }
+
+
+    /** {@inheritDoc} */
+    public synchronized void activateOptions() {
+        if (templates == null) {
+            try {
+                InputStream is = XSLTLayout.class.getResourceAsStream("default.xslt");
+                StreamSource ss = new StreamSource(is);
+                templates = transformerFactory.newTemplates(ss);
+                encoding = Charset.forName("US-ASCII");
+                mediaType = "text/plain";
+            } catch (Exception ex) {
+                LogLog.error("Error loading default.xslt", ex);
+            }
+        }
+        activated = true;
+    }
+
+    /**
+     * Gets whether throwables should not be output.
+     * @return true if throwables should not be output.
+     */
+    public synchronized boolean ignoresThrowable() {
+        return ignoresThrowable;
+    }
+
+    /**
+     * Sets whether throwables should not be output.
+     * @param ignoresThrowable if true, throwables should not be output.
+    */
+    public synchronized void setIgnoresThrowable(boolean ignoresThrowable) {
+      this.ignoresThrowable = ignoresThrowable;
+    }
+
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized String format(final LoggingEvent event) {
+      if (!activated) {
+          activateOptions();
+      }
+      if (templates != null && encoding != null) {
+          outputStream.reset();
+
+          try {
+            TransformerHandler transformer =
+                      transformerFactory.newTransformerHandler(templates);
+
+            transformer.setResult(new StreamResult(outputStream));
+            transformer.startDocument();
+
+            //
+            //   event element
+            //
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addAttribute(null, "logger", "logger",
+                    "CDATA", event.getLoggerName());
+            attrs.addAttribute(null, "timestamp", "timestamp",
+                    "CDATA", Long.toString(event.timeStamp));
+            attrs.addAttribute(null, "level", "level",
+                    "CDATA", event.getLevel().toString());
+            attrs.addAttribute(null, "thread", "thread",
+                    "CDATA", event.getThreadName());
+            StringBuffer buf = new StringBuffer();
+            utcDateFormat.format(event.timeStamp, buf);
+            attrs.addAttribute(null, "time", "time", "CDATA", buf.toString());
+
+
+            transformer.startElement(LOG4J_NS, "event", "event", attrs);
+            attrs.clear();
+
+            //
+            //   message element
+            //
+            transformer.startElement(LOG4J_NS, "message", "message", attrs);
+            String msg = event.getRenderedMessage();
+            if (msg != null && msg.length() > 0) {
+                transformer.characters(msg.toCharArray(), 0, msg.length());
+            }
+            transformer.endElement(LOG4J_NS, "message", "message");
+
+            //
+            //    NDC element
+            //
+            String ndc = event.getNDC();
+            if (ndc != null) {
+                transformer.startElement(LOG4J_NS, "NDC", "NDC", attrs);
+                char[] ndcChars = ndc.toCharArray();
+                transformer.characters(ndcChars, 0, ndcChars.length);
+                transformer.endElement(LOG4J_NS, "NDC", "NDC");
+            }
+
+            //
+            //    throwable element unless suppressed
+            //
+              if (!ignoresThrowable) {
+                String[] s = event.getThrowableStrRep();
+                if (s != null) {
+                    transformer.startElement(LOG4J_NS, "throwable",
+                            "throwable", attrs);
+                    char[] nl = new char[] { '\n' };
+                    for (int i = 0; i < s.length; i++) {
+                        char[] line = s[i].toCharArray();
+                        transformer.characters(line, 0, line.length);
+                        transformer.characters(nl, 0, nl.length);
+                    }
+                    transformer.endElement(LOG4J_NS, "throwable", "throwable");
+                }
+              }
+
+              //
+              //     location info unless suppressed
+              //
+              //
+              if (locationInfo) {
+                LocationInfo locationInfo = event.getLocationInformation();
+                attrs.addAttribute(null, "class", "class", "CDATA",
+                        locationInfo.getClassName());
+                attrs.addAttribute(null, "method", "method", "CDATA",
+                          locationInfo.getMethodName());
+                attrs.addAttribute(null, "file", "file", "CDATA",
+                            locationInfo.getFileName());
+                attrs.addAttribute(null, "line", "line", "CDATA",
+                            locationInfo.getLineNumber());
+                transformer.startElement(LOG4J_NS, "locationInfo",
+                        "locationInfo", attrs);
+                transformer.endElement(LOG4J_NS, "locationInfo",
+                        "locationInfo");
+              }
+
+              if (properties) {
+                //
+                //    write MDC contents out as properties element
+                //
+                Set mdcKeySet = MDCKeySetExtractor.INSTANCE.getPropertyKeySet(event);
+
+                if ((mdcKeySet != null) && (mdcKeySet.size() > 0)) {
+                    attrs.clear();
+                    transformer.startElement(LOG4J_NS,
+                            "properties", "properties", attrs);
+                    Object[] keys = mdcKeySet.toArray();
+                    Arrays.sort(keys);
+                    for (int i = 0; i < keys.length; i++) {
+                        String key = keys[i].toString();
+                        Object val = event.getMDC(key);
+                        attrs.clear();
+                        attrs.addAttribute(null, "name", "name", "CDATA", key);
+                        attrs.addAttribute(null, "value", "value",
+                                "CDATA", val.toString());
+                        transformer.startElement(LOG4J_NS,
+                                "data", "data", attrs);
+                        transformer.endElement(LOG4J_NS, "data", "data");
+                    }
+                }
+              }
+
+
+            transformer.endElement(LOG4J_NS, "event", "event");
+            transformer.endDocument();
+
+            String body = encoding.decode(
+                    ByteBuffer.wrap(outputStream.toByteArray())).toString();
+            outputStream.reset();
+            //
+            //   must remove XML declaration since it may
+            //      result in erroneous encoding info
+            //      if written by FileAppender in a different encoding
+            if (body.startsWith("<?xml ")) {
+                int endDecl = body.indexOf("?>");
+                if (endDecl != -1) {
+                    for(endDecl += 2; 
+					     endDecl < body.length() &&
+						 (body.charAt(endDecl) == '\n' || body.charAt(endDecl) == '\r'); 
+						 endDecl++);
+                    return body.substring(endDecl);
+                }
+            }
+            return body;
+          } catch (Exception ex) {
+              LogLog.error("Error during transformation", ex);
+              return ex.toString();
+          }
+      }
+      return "No valid transform or encoding specified.";
+    }
+
+    /**
+     * Sets XSLT transform.
+     * @param xsltdoc DOM document containing XSLT transform source,
+     * may be modified.
+     * @throws TransformerConfigurationException if transformer can not be
+     * created.
+     */
+    public void setTransform(final Document xsltdoc)
+            throws TransformerConfigurationException {
+        //
+        //  scan transform source for xsl:output elements
+        //    and extract encoding, media (mime) type and output method
+        //
+        String encodingName = null;
+        mediaType = null;
+        String method = null;
+        NodeList nodes = xsltdoc.getElementsByTagNameNS(
+                XSLT_NS,
+                "output");
+        for(int i = 0; i < nodes.getLength(); i++) {
+            Element outputElement = (Element) nodes.item(i);
+            if (method == null || method.length() == 0) {
+                method = outputElement.getAttributeNS(null, "method");
+            }
+            if (encodingName == null || encodingName.length() == 0) {
+                encodingName = outputElement.getAttributeNS(null, "encoding");
+            }
+            if (mediaType == null || mediaType.length() == 0) {
+                mediaType = outputElement.getAttributeNS(null, "media-type");
+            }
+        }
+
+        if (mediaType == null || mediaType.length() == 0) {
+            if ("html".equals(method)) {
+                mediaType = "text/html";
+            } else if ("xml".equals(method)) {
+                mediaType = "text/xml";
+            } else {
+                mediaType = "text/plain";
+            }
+        }
+
+        //
+        //  if encoding was not specified,
+        //     add xsl:output encoding=US-ASCII to XSLT source
+        //
+        if (encodingName == null || encodingName.length() == 0) {
+            Element transformElement = xsltdoc.getDocumentElement();
+            Element outputElement = xsltdoc.
+                    createElementNS(XSLT_NS, "output");
+            outputElement.setAttributeNS(null, "encoding", "US-ASCII");
+            transformElement.insertBefore(outputElement, transformElement.getFirstChild());
+            encoding = Charset.forName("US-ASCII");
+        } else {
+            encoding = Charset.forName(encodingName);
+        }
+
+        DOMSource transformSource = new DOMSource(xsltdoc);
+        
+        templates = transformerFactory.newTemplates(transformSource);
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean parseUnrecognizedElement(final Element element,
+                                            final Properties props)
+            throws Exception {
+        if (XSLT_NS.equals(element.getNamespaceURI()) ||
+                element.getNodeName().indexOf("transform") != -1 ||
+                element.getNodeName().indexOf("stylesheet") != -1) {
+            //
+            //   DOMConfigurator typically not namespace aware
+            //     serialize tree and reparse.
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            DOMSource source = new DOMSource(element);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(source, new StreamResult(os));
+
+            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setNamespaceAware(true);
+            Document xsltdoc = domFactory.newDocumentBuilder().parse(is);
+            setTransform(xsltdoc);
+            return true;
+        }
+        return false;
+    }
+
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="184" tokens="449">
+<file line="57" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/extras/UtilLoggingLevel.java"/>
+<file line="54" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/helpers/UtilLoggingLevel.java"/>
+<codefragment>
+<![CDATA[
+    public static final int CONFIG_INT = 14000;
+    /**
+     * Numerical value for FINE.
+     */
+    public static final int FINE_INT = 13000;
+    /**
+     * Numerical value for FINER.
+     */
+    public static final int FINER_INT = 12000;
+    /**
+     * Numerical value for FINEST.
+     */
+    public static final int FINEST_INT = 11000;
+    /**
+     * Numerical value for UNKNOWN.
+     */
+    public static final int UNKNOWN_INT = 10000;
+
+    /**
+     * SEVERE.
+     */
+    public static final UtilLoggingLevel SEVERE =
+            new UtilLoggingLevel(SEVERE_INT, "SEVERE", 0);
+    /**
+     * WARNING.
+     */
+    public static final UtilLoggingLevel WARNING =
+            new UtilLoggingLevel(WARNING_INT, "WARNING", 4);
+    /**
+     * INFO.
+     */
+    public static final UtilLoggingLevel INFO =
+            new UtilLoggingLevel(INFO_INT, "INFO", 5);
+    /**
+     * CONFIG.
+     */
+    public static final UtilLoggingLevel CONFIG =
+            new UtilLoggingLevel(CONFIG_INT, "CONFIG", 6);
+    /**
+     * FINE.
+     */
+    public static final UtilLoggingLevel FINE =
+            new UtilLoggingLevel(FINE_INT, "FINE", 7);
+    /**
+     * FINER.
+     */
+    public static final UtilLoggingLevel FINER =
+            new UtilLoggingLevel(FINER_INT, "FINER", 8);
+    /**
+     * FINEST.
+     */
+    public static final UtilLoggingLevel FINEST =
+            new UtilLoggingLevel(FINEST_INT, "FINEST", 9);
+
+    /**
+     * Create new instance.
+     * @param level numeric value for level.
+     * @param levelStr symbolic name for level.
+     * @param syslogEquivalent Equivalent syslog severity.
+     */
+    protected UtilLoggingLevel(final int level,
+                               final String levelStr,
+                               final int syslogEquivalent) {
+        super(level, levelStr, syslogEquivalent);
+    }
+
+    /**
+     * Convert an integer passed as argument to a level. If the
+     * conversion fails, then this method returns the specified default.
+     * @param val numeric value.
+     * @param defaultLevel level to be returned if no level matches
+     * numeric value.
+     * @return matching level or default level.
+     */
+    public static UtilLoggingLevel toLevel(final int val,
+                               final UtilLoggingLevel defaultLevel) {
+        switch (val) {
+            case SEVERE_INT:
+                return SEVERE;
+
+            case WARNING_INT:
+                return WARNING;
+
+            case INFO_INT:
+                return INFO;
+
+            case CONFIG_INT:
+                return CONFIG;
+
+            case FINE_INT:
+                return FINE;
+
+            case FINER_INT:
+                return FINER;
+
+            case FINEST_INT:
+                return FINEST;
+
+            default:
+                return defaultLevel;
+        }
+    }
+
+    /**
+     * Gets level matching numeric value.
+     * @param val numeric value.
+     * @return  matching level or UtilLoggerLevel.FINEST if no match.
+     */
+    public static Level toLevel(final int val) {
+        return toLevel(val, FINEST);
+    }
+
+    /**
+     * Gets list of supported levels.
+     * @return  list of supported levels.
+     */
+    public static List getAllPossibleLevels() {
+        ArrayList list = new ArrayList();
+        list.add(FINE);
+        list.add(FINER);
+        list.add(FINEST);
+        list.add(INFO);
+        list.add(CONFIG);
+        list.add(WARNING);
+        list.add(SEVERE);
+        return list;
+    }
+
+    /**
+     * Get level with specified symbolic name.
+     * @param s symbolic name.
+     * @return matching level or Level.DEBUG if no match.
+     */
+    public static Level toLevel(final String s) {
+        return toLevel(s, Level.DEBUG);
+    }
+
+
+    /**
+     * Get level with specified symbolic name.
+     * @param sArg symbolic name.
+     * @param defaultLevel level to return if no match.
+     * @return matching level or defaultLevel if no match.
+     */
+    public static Level toLevel(final String sArg,
+                                final Level defaultLevel) {
+        if (sArg == null) {
+            return defaultLevel;
+        }
+
+        String s = sArg.toUpperCase();
+
+        if (s.equals("SEVERE")) {
+            return SEVERE;
+        }
+
+        //if(s.equals("FINE")) return Level.FINE;
+        if (s.equals("WARNING")) {
+            return WARNING;
+        }
+
+        if (s.equals("INFO")) {
+            return INFO;
+        }
+
+        if (s.equals("CONFI")) {
+            return CONFIG;
+        }
+
+        if (s.equals("FINE")) {
+            return FINE;
+        }
+
+        if (s.equals("FINER")) {
+            return FINER;
+        }
+
+        if (s.equals("FINEST")) {
+            return FINEST;
+        }
+        return defaultLevel;
+    }
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="78" tokens="319">
+<file line="159" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/UtilLoggingXMLDecoder.java"/>
+<file line="164" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<codefragment>
+<![CDATA[
+      InputSource inputSource =
+        new InputSource(new StringReader(buf.toString()));
+      document = docBuilder.parse(inputSource);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return document;
+  }
+
+  /**
+   * Decodes a File into a Vector of LoggingEvents.
+   * @param url the url of a file containing events to decode
+   * @return Vector of LoggingEvents
+   * @throws IOException if IO error during processing.
+   */
+  public Vector decode(final URL url) throws IOException {
+    LineNumberReader reader;
+    boolean isZipFile = url.getPath().toLowerCase().endsWith(".zip");
+    InputStream inputStream;
+    if (isZipFile) {
+        inputStream = new ZipInputStream(url.openStream());
+        //move stream to next entry so we can read it
+        ((ZipInputStream)inputStream).getNextEntry();
+    } else {
+        inputStream = url.openStream();
+    }
+    if (owner != null) {
+        reader = new LineNumberReader(
+                new InputStreamReader(
+                        new ProgressMonitorInputStream(owner,
+                                "Loading " + url , inputStream), ENCODING));
+    } else {
+        reader = new LineNumberReader(new InputStreamReader(inputStream, ENCODING));
+    }
+    Vector v = new Vector();
+
+      String line;
+      Vector events;
+      try {
+          while ((line = reader.readLine()) != null) {
+              StringBuffer buffer = new StringBuffer(line);
+              for (int i = 0; i < 1000; i++) {
+                  buffer.append(reader.readLine()).append("\n");
+              }
+              events = decodeEvents(buffer.toString());
+              if (events != null) {
+                  v.addAll(events);
+              }
+          }
+    } finally {
+      partialEvent = null;
+      try {
+        if (reader != null) {
+          reader.close();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return v;
+  }
+
+  /**
+   * Decodes a String representing a number of events into a
+   * Vector of LoggingEvents.
+   * @param document to decode events from
+   * @return Vector of LoggingEvents
+   */
+  public Vector decodeEvents(final String document) {
+
+      if (document != null) {
+
+          if (document.trim().equals("")) {
+              return null;
+          }
+
+          String newDoc;
+]]>
+</codefragment>
+</duplication>
+<duplication lines="65" tokens="209">
+<file line="237" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/UtilLoggingXMLDecoder.java"/>
+<file line="240" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<codefragment>
+<![CDATA[
+          String newPartialEvent = null;
+          //separate the string into the last portion ending with </record>
+          // (which will be processed) and the partial event which
+          // will be combined and processed in the next section
+
+          //if the document does not contain a record end,
+          // append it to the partial event string
+          if (document.lastIndexOf(RECORD_END) == -1) {
+              partialEvent = partialEvent + document;
+              return null;
+          }
+
+          if (document.lastIndexOf(RECORD_END) + RECORD_END.length()
+                  < document.length()) {
+              newDoc = document.substring(0,
+                      document.lastIndexOf(RECORD_END) + RECORD_END.length());
+              newPartialEvent = document.substring(
+                      document.lastIndexOf(RECORD_END) + RECORD_END.length());
+          } else {
+              newDoc = document;
+          }
+          if (partialEvent != null) {
+              newDoc = partialEvent + newDoc;
+          }
+          partialEvent = newPartialEvent;
+
+          Document doc = parse(newDoc);
+          if (doc == null) {
+              return null;
+          }
+          return decodeEvents(doc);
+      }
+      return null;
+  }
+
+    /**
+      * Converts the string data into an XML Document, and then soaks out the
+      * relevant bits to form a new LoggingEvent instance which can be used
+      * by any Log4j element locally.
+      * @param data XML fragment
+      * @return a single LoggingEvent or null
+      */
+  public LoggingEvent decode(final String data) {
+    Document document = parse(data);
+
+    if (document == null) {
+      return null;
+    }
+
+    Vector events = decodeEvents(document);
+
+    if (events.size() > 0) {
+      return (LoggingEvent) events.firstElement();
+    }
+
+    return null;
+  }
+
+  /**
+   * Given a Document, converts the XML into a Vector of LoggingEvents.
+   * @param document XML document
+   * @return Vector of LoggingEvents
+   */
+  private Vector decodeEvents(final Document document) {
+    Vector events = new Vector();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="27" tokens="202">
+<file line="101" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/AndRule.java"/>
+<file line="101" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/OrRule.java"/>
+<codefragment>
+<![CDATA[
+        if (result) {
+            for (Iterator iter = tempMatches1.entrySet().iterator();iter.hasNext();) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                Object key = entry.getKey();
+                Set value = (Set)entry.getValue();
+                Set mainSet = (Set) matches.get(key);
+                if (mainSet == null) {
+                    mainSet = new HashSet();
+                    matches.put(key, mainSet);
+                }
+                mainSet.addAll(value);
+            }
+            for (Iterator iter = tempMatches2.entrySet().iterator();iter.hasNext();) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                Object key = entry.getKey();
+                Set value = (Set)entry.getValue();
+                Set mainSet = (Set) matches.get(key);
+                if (mainSet == null) {
+                    mainSet = new HashSet();
+                    matches.put(key, mainSet);
+                }
+                mainSet.addAll(value);
+            }
+        }
+        return result;
+  }
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="36" tokens="174">
+<file line="61" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/LevelEqualsRule.java"/>
+<file line="61" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/NotLevelEqualsRule.java"/>
+<codefragment>
+<![CDATA[
+    private LevelEqualsRule(final Level level) {
+        super();
+        this.level = level;
+    }
+
+    /**
+     * Populate list of levels.
+     */
+    private static void populateLevels() {
+        levelList = new LinkedList();
+
+        levelList.add(Level.FATAL.toString());
+        levelList.add(Level.ERROR.toString());
+        levelList.add(Level.WARN.toString());
+        levelList.add(Level.INFO.toString());
+        levelList.add(Level.DEBUG.toString());
+		Level trace = Level.toLevel(5000, null);
+		if (trace != null) {
+			levelList.add(trace.toString());
+	    }
+    }
+
+    /**
+     * Create new rule.
+     * @param value name of level.
+     * @return instance of LevelEqualsRule.
+     */
+    public static Rule getRule(final String value) {
+        Level thisLevel;
+        if (levelList.contains(value.toUpperCase())) {
+            thisLevel = Level.toLevel(value.toUpperCase());
+          } else {
+            thisLevel = UtilLoggingLevel.toLevel(value.toUpperCase());
+        }
+
+        return new LevelEqualsRule(thisLevel);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="44" tokens="153">
+<file line="106" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/LevelEqualsRule.java"/>
+<file line="106" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/NotLevelEqualsRule.java"/>
+<codefragment>
+<![CDATA[
+        boolean result = (level.toInt() == eventLevel.toInt());
+        if (result && matches != null) {
+            Set entries = (Set) matches.get(LoggingEventFieldResolver.LEVEL_FIELD);
+            if (entries == null) {
+                entries = new HashSet();
+                matches.put(LoggingEventFieldResolver.LEVEL_FIELD, entries);
+            }
+            entries.add(eventLevel);
+        }
+        return result;
+    }
+
+    /**
+     * Deserialize the state of the object.
+     *
+     * @param in object input stream.
+     *
+     * @throws IOException if error in reading stream for deserialization.
+     */
+    private void readObject(final java.io.ObjectInputStream in)
+            throws IOException {
+        populateLevels();
+        boolean isUtilLogging = in.readBoolean();
+        int levelInt = in.readInt();
+        if (isUtilLogging) {
+            level = UtilLoggingLevel.toLevel(levelInt);
+        } else {
+            level = Level.toLevel(levelInt);
+        }
+    }
+
+    /**
+     * Serialize the state of the object.
+     *
+     * @param out object output stream.
+     *
+     * @throws IOException if error in writing stream during serialization.
+     */
+    private void writeObject(final java.io.ObjectOutputStream out)
+            throws IOException {
+        out.writeBoolean(level instanceof UtilLoggingLevel);
+        out.writeInt(level.toInt());
+    }
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="70" tokens="132">
+<file line="47" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/extras/SoundAppender.java"/>
+<file line="44" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/varia/SoundAppender.java"/>
+<codefragment>
+<![CDATA[
+public final class SoundAppender extends AppenderSkeleton {
+
+	private AudioClip clip;
+	private String audioURL;
+
+	public SoundAppender() {
+	}
+
+	/**
+	 * Attempt to initialize the appender by creating a reference to an AudioClip.
+	 * 
+	 * Will log a message if format is not supported, file not found, etc.
+	 * 
+	 */
+	public void activateOptions() {
+		/*
+		 * AudioSystem.getAudioInputStream requires jdk 1.3,
+		 * so we use applet.newaudioclip instead
+		 *
+		 */
+		try {
+			clip = Applet.newAudioClip(new URL(audioURL));
+		} catch (MalformedURLException mue) {
+            LogLog.error("unable to initialize SoundAppender", mue);}
+		if (clip == null) {
+		      LogLog.error("Unable to initialize SoundAppender");
+		}
+	}
+
+	/**
+	 * Accessor
+	 * 
+	 * @return audio file
+	 */
+	public String getAudioURL() {
+		return audioURL;
+	}
+
+	/**
+	 * Mutator - common format for a file-based url:
+	 * file:///c:/path/someaudioclip.wav
+	 * 
+	 * @param audioURL
+	 */
+	public void setAudioURL(String audioURL) {
+		this.audioURL = audioURL;
+	}
+
+	/**
+	 * Play the sound if an event is being processed
+	 */
+	protected void append(LoggingEvent event) {
+		if (clip != null) {
+			clip.play();
+		}
+	}
+
+	public void close() {
+		//nothing to do
+	}
+
+    /**
+     * Gets whether appender requires a layout.
+     * @return false
+     */
+  public boolean requiresLayout() {
+      return false;
+  }
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="40" tokens="121">
+<file line="60" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rolling/helper/GZCompressAction.java"/>
+<file line="61" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rolling/helper/ZipCompressAction.java"/>
+<codefragment>
+<![CDATA[
+  public GZCompressAction(
+    final File source, final File destination, final boolean deleteSource) {
+    if (source == null) {
+      throw new NullPointerException("source");
+    }
+
+    if (destination == null) {
+      throw new NullPointerException("destination");
+    }
+
+    this.source = source;
+    this.destination = destination;
+    this.deleteSource = deleteSource;
+  }
+
+  /**
+   * Compress.
+   * @return true if successfully compressed.
+   * @throws IOException on IO exception.
+   */
+  public boolean execute() throws IOException {
+    return execute(source, destination, deleteSource);
+  }
+
+  /**
+   * Compress a file.
+   *
+   * @param source file to compress, may not be null.
+   * @param destination compressed file, may not be null.
+   * @param deleteSource if true, attempt to delete file on completion.  Failure to delete
+   * does not cause an exception to be thrown or affect return value.
+   * @return true if source file compressed.
+   * @throws IOException on IO exception.
+   */
+  public static boolean execute(
+    final File source, final File destination, final boolean deleteSource)
+          throws IOException {
+    if (source.exists()) {
+      FileInputStream fis = new FileInputStream(source);
+      FileOutputStream fos = new FileOutputStream(destination);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="28" tokens="116">
+<file line="87" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/MulticastAppender.java"/>
+<file line="107" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/UDPAppender.java"/>
+<codefragment>
+<![CDATA[
+     super(false);
+  }
+
+  /**
+     Open the multicast sender for the <b>RemoteHost</b> and <b>Port</b>.
+  */
+  public void activateOptions() {
+    try {
+      hostname = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException uhe) {
+      try {
+        hostname = InetAddress.getLocalHost().getHostAddress();
+      } catch (UnknownHostException uhe2) {
+        hostname = "unknown";
+      }
+    }
+
+    //allow system property of application to be primary
+    if (application == null) {
+      application = System.getProperty(Constants.APPLICATION_KEY);
+    } else {
+      if (System.getProperty(Constants.APPLICATION_KEY) != null) {
+        application = application + "-" + System.getProperty(Constants.APPLICATION_KEY);
+      }
+    }
+
+    if(remoteHost != null) {
+      address = getAddressByName(remoteHost);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="18" tokens="113">
+<file line="356" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<file line="396" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<codefragment>
+<![CDATA[
+          NodeList propertyList = list.item(y).getChildNodes();
+          int propertyLength = propertyList.getLength();
+
+          for (int i = 0; i < propertyLength; i++) {
+            String propertyTag = propertyList.item(i).getNodeName();
+
+            if (propertyTag.equalsIgnoreCase("log4j:data")) {
+              Node property = propertyList.item(i);
+              String name =
+                property.getAttributes().getNamedItem("name").getNodeValue();
+              String value =
+                property.getAttributes().getNamedItem("value").getNodeValue();
+              properties.put(name, value);
+            }
+          }
+        }
+
+        if (tagName.equalsIgnoreCase("log4j:throwable")) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="25" tokens="108">
+<file line="246" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rolling/RollingFileAppender.java"/>
+<file line="294" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rolling/RollingFileAppender.java"/>
+<codefragment>
+<![CDATA[
+              closeWriter();
+
+              boolean success = true;
+
+              if (rollover.getSynchronous() != null) {
+                success = false;
+
+                try {
+                  success = rollover.getSynchronous().execute();
+                } catch (Exception ex) {
+                  exception = ex;
+                }
+              }
+
+              if (success) {
+                if (rollover.getAppend()) {
+                  fileLength = new File(rollover.getActiveFileName()).length();
+                } else {
+                  fileLength = 0;
+                }
+
+                if (rollover.getAsynchronous() != null) {
+                  lastRolloverAsyncAction = rollover.getAsynchronous();
+                  new Thread(lastRolloverAsyncAction).start();
+                }
+]]>
+</codefragment>
+</duplication>
+<duplication lines="27" tokens="104">
+<file line="407" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/UtilLoggingXMLDecoder.java"/>
+<file line="426" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<codefragment>
+<![CDATA[
+            }
+        }
+
+      LocationInfo info;
+      if ((fileName != null)
+              || (className != null)
+              || (methodName != null)
+              || (lineNumber != null)) {
+          info = new LocationInfo(fileName, className, methodName, lineNumber);
+      } else {
+        info = LocationInfo.NA_LOCATION_INFO;
+      }
+
+        ThrowableInformation throwableInfo = null;
+        if (exception != null) {
+            throwableInfo = new ThrowableInformation(exception);
+        }
+
+        LoggingEvent loggingEvent = new LoggingEvent(null,
+                logger, timeStamp, level, message,
+                threadName,
+                throwableInfo,
+                ndc,
+                info,
+                properties);
+
+      events.add(loggingEvent);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="17" tokens="103">
+<file line="64" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/LevelEqualsRule.java"/>
+<file line="57" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/LevelInequalityRule.java"/>
+<file line="64" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/rule/NotLevelEqualsRule.java"/>
+<codefragment>
+<![CDATA[
+    }
+
+    /**
+     * Populate list of levels.
+     */
+    private static void populateLevels() {
+        levelList = new LinkedList();
+
+        levelList.add(Level.FATAL.toString());
+        levelList.add(Level.ERROR.toString());
+        levelList.add(Level.WARN.toString());
+        levelList.add(Level.INFO.toString());
+        levelList.add(Level.DEBUG.toString());
+		Level trace = Level.toLevel(5000, null);
+		if (trace != null) {
+			levelList.add(trace.toString());
+	    }
+]]>
+</codefragment>
+</duplication>
+<duplication lines="26" tokens="101">
+<file line="435" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/UtilLoggingXMLDecoder.java"/>
+<file line="462" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/xml/XMLDecoder.java"/>
+<codefragment>
+<![CDATA[
+    }
+    return events;
+  }
+
+    /**
+     * Get contents of CDATASection.
+     * @param n CDATASection
+     * @return text content of all text or CDATA children of node.
+     */
+  private String getCData(final Node n) {
+    StringBuffer buf = new StringBuffer();
+    NodeList nl = n.getChildNodes();
+
+    for (int x = 0; x < nl.getLength(); x++) {
+      Node innerNode = nl.item(x);
+
+      if (
+        (innerNode.getNodeType() == Node.TEXT_NODE)
+          || (innerNode.getNodeType() == Node.CDATA_SECTION_NODE)) {
+        buf.append(innerNode.getNodeValue());
+      }
+    }
+
+    return buf.toString();
+  }
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="21" tokens="100">
+<file line="201" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/SocketNode13.java"/>
+<file line="175" path="/Users/cy/Documents/Development/log4j-extras/apache-log4j-extras-1.2.17/src/main/java/org/apache/log4j/receivers/net/XMLSocketNode.java"/>
+<codefragment>
+<![CDATA[
+          }
+        }
+      } catch (java.io.EOFException e) {
+        getLogger().info("Caught java.io.EOFException closing connection.");
+        listenerException = e;
+      } catch (java.net.SocketException e) {
+        getLogger().info("Caught java.net.SocketException closing connection.");
+        listenerException = e;
+      } catch (IOException e) {
+        getLogger().info("Caught java.io.IOException: " + e);
+        getLogger().info("Closing connection.");
+        listenerException = e;
+      } catch (Exception e) {
+        getLogger().error("Unexpected exception. Closing connection.", e);
+        listenerException = e;
+      }
+    }
+
+    // close the socket
+    try {
+      if (ois != null) {
+]]>
+</codefragment>
+</duplication>
+</pmd-cpd>
