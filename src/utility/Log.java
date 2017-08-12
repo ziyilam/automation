@@ -11,7 +11,7 @@ public class Log {
 
 		Log.info("----------------------------------------------------------------------------------------");
 		Log.info("----------------------------------------------------------------------------------------");
-		Log.info("-------------------             " + sTestCaseName
+		Log.warn("-------------------             " + sTestCaseName
 				+ " TestStep begins                -------------------");
 		Log.info("----------------------------------------------------------------------------------------");
 		Log.info("----------------------------------------------------------------------------------------");
@@ -19,13 +19,21 @@ public class Log {
 	}
 
 	public static void endTestCase(String sTestCaseName) {
-		Log.info("--------------------------------TestCase " + sTestCaseName + " Ended"
+		Log.warn("--------------------------------TestCase " + sTestCaseName + " Ended"
 				+ "------------------------------------");
 		Log.info("-");
 		Log.info("-");
 		Log.info("-");
 		Log.info("-");
 
+	}
+	
+	public static void trace(String message) {
+		Log.trace(message);
+	}
+	
+	public static void debug(String message) {
+		Log.debug(message);
 	}
 
 	public static void info(String message) {
@@ -44,10 +52,6 @@ public class Log {
 		Log.fatal(message);
 	}
 
-	public static void debug(String message) {
-		Log.debug(message);
-	}
-
 	public static void info(ArrayList<String> message) {
 		Log.info(message);
 
@@ -57,4 +61,5 @@ public class Log {
 		Log.info(message);
 
 	}
+	
 }

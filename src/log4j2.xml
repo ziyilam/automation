@@ -2,12 +2,23 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+        		<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
         </Console>
+        <File name="log" fileName="test.log" append="false">
+        		<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+        		<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
+        	</File>
+        	<RollingFile name="RollingFile" filename="logs/logger.log" filePattern="logs/$${date:yyyy-MM}/logger-%d{MM-dd-yyyy}-%i.log.gz">
+        		        		<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
+        		        		<SizeBasedTriggeringPolicy size="22MB"/>
+        	</RollingFile>
     </Appenders>
     <Loggers>
         <Root level="info" additivity="false">
             <AppenderRef ref="console"/>
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="log"/>
         </Root>
     </Loggers>
 </Configuration>
