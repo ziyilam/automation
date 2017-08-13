@@ -2,6 +2,7 @@
 /.recommenders/
 */bin/
 *.xlsx
+*.html
 
 # BlueJ files
 *.ctxt

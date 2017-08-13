@@ -2,6 +2,8 @@ package config;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,10 +12,10 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import executionEngine.DriverScript;
-import utility.Log;
 
 public class ActionKeywords {
 	public static WebDriver driver;
+	private static final Logger logger = LogManager.getLogger(ActionKeywords.class.getName());
 
 	public void openBrowser(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
@@ -39,7 +41,7 @@ public class ActionKeywords {
 				break;
 
 			default:
-				Log.warn("Browser name not match");
+				logger.warn("Browser name not match");
 				break;
 			}
 
@@ -48,21 +50,21 @@ public class ActionKeywords {
 			// driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-			Log.info("Action......Opening the browser");
+			logger.info("Action......Opening the browser");
 
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|openBrowser. Exception Message - " + e.getMessage());
+			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|openBrowser. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
 
 	public void tryClick(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Clicking on ObjectLocator " + sObjectLocator);
+			logger.info("Action......Clicking on ObjectLocator " + sObjectLocator);
 			// driver.findElement(By.cssSelector(sObjectLocator)).click();
 			driver.findElement(By.xpath(sObjectLocator)).click();
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - " + e.getMessage());
+			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 
@@ -70,22 +72,22 @@ public class ActionKeywords {
 
 	public void tryInput(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Input the text into ObjectLocator " + sObjectLocator);
+			logger.info("Action......Input the text into ObjectLocator " + sObjectLocator);
 			// driver.findElement(By.cssSelector(sObjectLocator)).sendKeys(sTestData);
 			driver.findElement(By.xpath(sObjectLocator)).sendKeys(sTestData);
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryInput. Exception Message - " + e.getMessage());
+			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryInput. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
 
 	public void tryClose(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			Log.info("Action......Closing the browser");
+			logger.info("Action......Closing the browser");
 			driver.close();
 			// driver.quit();
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClose. Exception Message - " + e.getMessage());
+			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClose. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		// System.exit(0);
@@ -94,19 +96,19 @@ public class ActionKeywords {
 	public void tryVerify(String sObjectLocator, String sActionKeyword, String sTestData) {
 
 		try {
-			Log.info("Action......Try Verify text");
+			logger.info("Action......Try Verify text");
 			DriverScript.sCompareText = driver.findElement(By.xpath(sObjectLocator)).getText();
 			// if(DriverScript.sCompareText.equals(sTestData)){
 			if (DriverScript.sCompareText.equalsIgnoreCase(sTestData)) {
-				Log.info("Text verified");
+				logger.info("Text verified");
 			} else {
 				DriverScript.bResult = false;
-				Log.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
-				Log.info("Text not the same");
+				logger.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
+				logger.info("Text not the same");
 			}
 
 		} catch (Exception e) {
-			Log.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryVerify. Exception Message - " + e.getMessage());
+			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryVerify. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}

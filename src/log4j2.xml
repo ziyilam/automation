@@ -1,24 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
-    <Appenders>
-        <Console name="console" target="SYSTEM_OUT">
-        		<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
-        </Console>
-        <File name="log" fileName="test.log" append="false">
-        		<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-        		<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
-        	</File>
-        	<RollingFile name="RollingFile" filename="logs/logger.log" filePattern="logs/$${date:yyyy-MM}/logger-%d{MM-dd-yyyy}-%i.log.gz">
-        		        		<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{36} - %msg%n"/>
-        		        		<SizeBasedTriggeringPolicy size="22MB"/>
-        	</RollingFile>
-    </Appenders>
-    <Loggers>
-        <Root level="info" additivity="false">
-            <AppenderRef ref="console"/>
-            <AppenderRef ref="RollingFile"/>
-            <AppenderRef ref="log"/>
-        </Root>
-    </Loggers>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<ThresholdFilter level="warn" onMatch="ACCEPT"
+				onMismatch="DENY" />
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</Console>
+		<File name="log" fileName="error.log" append="false">
+			<ThresholdFilter level="warn" onMatch="ACCEPT"
+				onMismatch="DENY" />
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</File>
+		<RollingFile name="RollingFile" filename="logs/logger.log"
+			filePattern="logs/$${date:yyyy-MM}/logger-%d{MM-dd-yyyy}-%i.log.gz">
+			<ThresholdFilter level="info" onMatch="ACCEPT"
+				onMismatch="DENY" />
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+			<SizeBasedTriggeringPolicy size="11MB" />
+		</RollingFile>
+
+		<!-- <RollingFile name="HTMLLogger" filename="HTMLLogs/HTMLLogger.html" 
+			filePattern="HTMLLogs/$${date:yyyy-MM}/HTMLLogger-%d{MM-dd-yyyy}-%i.html"> 
+			<HTMLLayout charset="UTF-8" title="Automation Logs" locationInfo="false"/> 
+			<Policies> <TimeBasedTriggeringPolicy internal="1" modulate="true"/> <SizeBasedTriggeringPolicy 
+			size="11MB"/> </Policies> </RollingFile> -->
+		<File name="HTMLLogger" filename="HTMLLogger.html" append="false">
+			<ThresholdFilter level="info" onMatch="ACCEPT"
+				onMismatch="DENY" />
+			<HTMLLayout charset="UTF-8" title="Automation Logs"
+				locationInfo="false" />
+			<Policies>
+				<!-- <TimeBasedTriggeringPolicy internal="1" modulate="true"/> -->
+				<SizeBasedTriggeringPolicy size="11MB" />
+			</Policies>
+		</File>
+
+	</Appenders>
+	<Loggers>
+		<Logger name="config.ActionKeywords" level="info" additivity="true">
+
+		</Logger>
+		<Logger name="executionEngine.DriverScript" level="info"
+			additivity="true">
+
+		</Logger>
+		<Logger name="utility.ExcelUtils" level="info" additivity="true">
+
+		</Logger>
+
+		<Root level="info" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="HTMLLogger" />
+			<AppenderRef ref="log" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+
+	</Loggers>
 </Configuration>
