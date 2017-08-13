@@ -1,62 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+	<Properties>
+		<Property name="rawPattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
+		<Property name="coloredPattern">%d %highlight{%-5p}{FATAL=bright red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=bright blue} %style{[%t] %C{2} (%F:%L) -}{bright,black} %m%n</Property>
+   		<Property name="coloredShortPattern">%d %highlight{%-5p}{FATAL=bright red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=bright blue} %style{[%t] -}{bright,black} %m%n</Property>
+	</Properties>
 	<Appenders>
 		<Console name="console" target="SYSTEM_OUT">
-			<ThresholdFilter level="warn" onMatch="ACCEPT"
-				onMismatch="DENY" />
-			<PatternLayout
-				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+			<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${rawPattern}" />
 		</Console>
-		<File name="log" fileName="error.log" append="false">
-			<ThresholdFilter level="warn" onMatch="ACCEPT"
-				onMismatch="DENY" />
-			<PatternLayout
-				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		<File name="log" fileName="logs/error.log" append="false">
+			<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
 		</File>
-		<RollingFile name="RollingFile" filename="logs/logger.log"
-			filePattern="logs/$${date:yyyy-MM}/logger-%d{MM-dd-yyyy}-%i.log.gz">
-			<ThresholdFilter level="info" onMatch="ACCEPT"
-				onMismatch="DENY" />
-			<PatternLayout
-				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		<RollingFile name="RollingFile" filename="logs/logger.log" filePattern="logs/$${date:yyyy-MM}/logger-%d{MM-dd-yyyy}-%i.log.gz">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
 			<SizeBasedTriggeringPolicy size="11MB" />
 		</RollingFile>
-
-		<!-- <RollingFile name="HTMLLogger" filename="HTMLLogs/HTMLLogger.html" 
-			filePattern="HTMLLogs/$${date:yyyy-MM}/HTMLLogger-%d{MM-dd-yyyy}-%i.html"> 
-			<HTMLLayout charset="UTF-8" title="Automation Logs" locationInfo="false"/> 
-			<Policies> <TimeBasedTriggeringPolicy internal="1" modulate="true"/> <SizeBasedTriggeringPolicy 
-			size="11MB"/> </Policies> </RollingFile> -->
-		<File name="HTMLLogger" filename="HTMLLogger.html" append="false">
-			<ThresholdFilter level="info" onMatch="ACCEPT"
-				onMismatch="DENY" />
-			<HTMLLayout charset="UTF-8" title="Automation Logs"
-				locationInfo="false" />
-			<Policies>
-				<!-- <TimeBasedTriggeringPolicy internal="1" modulate="true"/> -->
-				<SizeBasedTriggeringPolicy size="11MB" />
-			</Policies>
+		<File name="HTMLLogger" filename="logs/HTMLLogger.html" append="false">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<HTMLLayout charset="UTF-8" title="Automation Logs" locationInfo="false" />
 		</File>
+		<!-- <RollingFile name="HTMLLogger" filename="HTMLLogs/HTMLLogger.html" filePattern="HTMLLogs/$${date:yyyy-MM}/HTMLLogger-%d{MM-dd-yyyy}-%i.html"> 
+				<HTMLLayout charset="UTF-8" title="Automation Logs" locationInfo="false"/> 
+				<Policies> 
+					<TimeBasedTriggeringPolicy internal="1" modulate="true"/> 
+					<SizeBasedTriggeringPolicy size="11MB"/> 
+				</Policies> 
+			</RollingFile> -->
 
 	</Appenders>
 	<Loggers>
 		<Logger name="config.ActionKeywords" level="info" additivity="true">
-
 		</Logger>
-		<Logger name="executionEngine.DriverScript" level="info"
-			additivity="true">
-
+		<Logger name="executionEngine.DriverScript" level="info" additivity="true">
 		</Logger>
 		<Logger name="utility.ExcelUtils" level="info" additivity="true">
-
 		</Logger>
-
 		<Root level="info" additivity="false">
 			<AppenderRef ref="console" />
 			<AppenderRef ref="HTMLLogger" />
 			<AppenderRef ref="log" />
 			<AppenderRef ref="RollingFile" />
 		</Root>
-
 	</Loggers>
 </Configuration>
