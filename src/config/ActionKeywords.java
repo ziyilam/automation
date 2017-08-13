@@ -112,5 +112,11 @@ public class ActionKeywords {
 			DriverScript.bResult = false;
 		}
 	}
+	
+	public void trySwitch(String sObjectLocator, String sActionKeyword, String sTestData) {
+		for(String handle : driver.getWindowHandles()) {
+			driver.switchTo().window(handle);
+		}
+	}
 
 }
