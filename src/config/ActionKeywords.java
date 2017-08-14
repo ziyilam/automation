@@ -114,8 +114,13 @@ public class ActionKeywords {
 	}
 	
 	public void trySwitch(String sObjectLocator, String sActionKeyword, String sTestData) {
-		for(String handle : driver.getWindowHandles()) {
-			driver.switchTo().window(handle);
+		try {
+			for(String handle : driver.getWindowHandles()) {
+				driver.switchTo().window(handle);
+				logger.info(handle);
+			}
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|trySwitch. Exception Message - " + e.getMessage());
 		}
 	}
 
