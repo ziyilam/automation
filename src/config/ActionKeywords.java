@@ -117,7 +117,7 @@ public class ActionKeywords {
 		try {
 			for(String handle : driver.getWindowHandles()) {
 				driver.switchTo().window(handle);
-				logger.info(handle);
+				logger.info(" windowHandle: " + handle);
 			}
 		} catch (Exception e) {
 			logger.error(" ActionKeywords|trySwitch. Exception Message - " + e.getMessage());

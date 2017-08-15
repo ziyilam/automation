@@ -4,8 +4,8 @@
 		<Property name="rawPattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
 		<Property name="coloredPattern">%d %highlight{%-5p}{FATAL=bright red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=bright blue} %style{[%t] %C{2} (%F:%L) -}{bright,black} %m%n</Property>
    		<Property name="coloredShortPattern">%d %highlight{%-5p}{FATAL=bright red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=bright blue} %style{[%t] -}{bright,black} %m%n</Property>
-		<Property name="fileHeader">[%d] Start of log (Author: zylam)\n====================================================\n </Property>
-		<Property name="fileFooter">[%d] End of log (Author: zylam)\n====================================================\n </Property>
+		<Property name="fileHeader">[%d] Start of log (Author: zylam)%n======================================================================================================================%n </Property>
+		<Property name="fileFooter">[%d] End of log (Author: zylam)  %n======================================================================================================================%n </Property>
 	</Properties>
 	<Appenders>
 		<Console name="console" target="SYSTEM_OUT">
