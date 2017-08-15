@@ -2,6 +2,8 @@
 /.recommenders/
 */bin/
 *.html
+Constants.java
+DataEngine.xlsx
 
 # BlueJ files
 *.ctxt
