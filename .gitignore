@@ -1,9 +1,7 @@
 /.metadata/
 /.recommenders/
 */bin/
-*.xlsx
 *.html
-Constants.java
 
 # BlueJ files
 *.ctxt
