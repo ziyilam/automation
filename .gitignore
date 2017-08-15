@@ -3,7 +3,7 @@
 */bin/
 *.html
 Constants.java
-*.xlsx
+DataEngine.xlsx
 
 # BlueJ files
 *.ctxt
