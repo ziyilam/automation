@@ -4,17 +4,23 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 
 import executionEngine.DriverScript;
 
 public class ActionKeywords {
 	public static WebDriver driver;
+	private static WebElement source;
+	private static WebElement target;
 	private static final Logger logger = LogManager.getLogger(ActionKeywords.class.getName());
 
 	public void openBrowser(String sObjectLocator, String sActionKeyword, String sTestData) {
@@ -38,6 +44,10 @@ public class ActionKeywords {
 
 			case "safari":
 				driver = new SafariDriver();
+				break;
+				
+			case "htmlunit":
+				driver = new HtmlUnitDriver();
 				break;
 
 			default:
@@ -121,7 +131,77 @@ public class ActionKeywords {
 			}
 		} catch (Exception e) {
 			logger.error(" ActionKeywords|trySwitch. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
 		}
+	}
+	
+	public void tryPopup(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			Alert alert = driver.switchTo().alert();
+			switch(sTestData.toLowerCase()) {
+			//accept or dismiss popup
+			case "accept":
+				alert.accept();
+				break;
+			case "dismiss":
+				alert.dismiss();
+				break;
+			//verify its contents
+			default:
+				DriverScript.sCompareText = alert.getText();
+				if(DriverScript.sCompareText.equalsIgnoreCase(sTestData)) {
+					logger.info(" text verified");
+				}else {
+					DriverScript.bResult = false;
+					logger.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
+					logger.info("Text not the same");
+				}
+				break;
+			
+			}
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|tryPopup. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
+	
+	public void tryNavigate(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			switch(sTestData.toLowerCase()) {
+			
+			// move back a single "item" in the browser's history
+			case "back":
+				driver.navigate().back();
+				break;
+			// move a single "item" forward in the browser's history
+			case "forward":
+				driver.navigate().forward();
+				break;
+			// refresh the current page
+			case "refresh":
+				driver.navigate().refresh();
+				break;
+			// load a new web page in the current browser window
+			default:
+				driver.navigate().to(sTestData);
+				break;
+			}
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|tryNavigate. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
+	
+	public void tryDragAndDrop(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			source = driver.findElement(By.xpath(sObjectLocator));
+			target = driver.findElement(By.xpath(sTestData));
+			(new Actions(driver)).dragAndDrop(source, target).perform();
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|tryDragAndDrop. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+		
 	}
 
 }
