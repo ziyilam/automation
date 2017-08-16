@@ -69,15 +69,17 @@ public class ActionKeywords {
 	}
 
 	public void tryClick(String sObjectLocator, String sActionKeyword, String sTestData) {
-		try {
-			logger.info("Action......Clicking on ObjectLocator " + sObjectLocator);
-			// driver.findElement(By.cssSelector(sObjectLocator)).click();
-			driver.findElement(By.xpath(sObjectLocator)).click();
-		} catch (Exception e) {
-			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - " + e.getMessage());
-			DriverScript.bResult = false;
-		}
-
+		
+			try {
+				logger.info("Action......Clicking on ObjectLocator " + sObjectLocator);
+				
+				driver.findElement(By.xpath(sObjectLocator)).click();
+				//source = driver.findElement(By.xpath(sObjectLocator));
+				//if(source.isEnabled())
+			} catch (Exception e) {
+				logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryClick. Exception Message - " + e.getMessage());
+				DriverScript.bResult = false;
+			}
 	}
 
 	public void tryInput(String sObjectLocator, String sActionKeyword, String sTestData) {

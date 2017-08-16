@@ -102,7 +102,7 @@ public class DriverScript {
 
 						sTestData = ExcelUtils.getCellData(iCountTestStep, Constants.Col_TestData,
 								Constants.Sheet_TestSteps);
-
+						logger.info(" sTestData from TestSteps: " + sTestData);
 						fetch_TestData(sTestData);
 
 						execute_Action();
@@ -200,18 +200,18 @@ public class DriverScript {
 		try {
 			// String str = sTestData.toLowerCase();
 			switch (sTestData.toLowerCase()) {
-			case "username":
-				iCellHeaderIndex = alCellHeader.indexOf("username");
+			case "d_username":
+				iCellHeaderIndex = alCellHeader.indexOf("d_username");
 				sTestDataItem = ExcelUtils.getCellData(iCountTestData, iCellHeaderIndex, Constants.Sheet_TestData);
 				logger.info("Fetching TestData Item: " + sTestDataItem);
 				break;
-			case "password":
-				iCellHeaderIndex = alCellHeader.indexOf("password");
+			case "d_password":
+				iCellHeaderIndex = alCellHeader.indexOf("d_password");
 				sTestDataItem = ExcelUtils.getCellData(iCountTestData, iCellHeaderIndex, Constants.Sheet_TestData);
 				logger.info("Fetching TestData Item: " + sTestDataItem);
 				break;
-			case "browser":
-				iCellHeaderIndex = alCellHeader.indexOf("browser");
+			case "d_browser":
+				iCellHeaderIndex = alCellHeader.indexOf("d_browser");
 				sTestDataItem = ExcelUtils.getCellData(iCountTestData, iCellHeaderIndex, Constants.Sheet_TestData);
 				logger.info("Fetching TestData Item: " + sTestDataItem);
 				break;
