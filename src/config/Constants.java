@@ -16,7 +16,7 @@ public class Constants {
 	public static final String IE_Property1 = "webdriver.ie.driver";
 	//for PC
 	public static final String IE_Property2 = ".\\Browser-Driver\\IEDriverServer.exe";
-	// No IEDriverServers for MACs //
+	// No IEDriverServers for MACs ////
 	
 	//for PC
 	public static final String Path_TestData = ".\\src\\dataEngine\\DataEngine.xlsx";
