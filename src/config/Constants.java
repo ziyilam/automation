@@ -3,15 +3,15 @@ package config;
 public class Constants {
 	public static final String Chrome_Property1 = "webdriver.chrome.driver";
 	//for PC
-	public static final String Chrome_Property2 = ".\\Browser-Driver\\chromedriver.exe";
+	//public static final String Chrome_Property2 = ".\\Browser-Driver\\chromedriver.exe";
 	//for MAC
-	//public static final String Chrome_Property2 = ".//Browser-Driver//chromedriver";
+	public static final String Chrome_Property2 = ".//Browser-Driver//chromedriver";
 	
 	public static final String Firefox_Property1 = "webdriver.gecko.driver";
 	//for PC
-	public static final String Firefox_Property2 = ".\\Browser-Driver\\geckodriver.exe";
+	//public static final String Firefox_Property2 = ".\\Browser-Driver\\geckodriver.exe";
 	//for MAC
-	//public static final String Firefox_Property2 = ".//Browser-Driver//geckodriver";
+	public static final String Firefox_Property2 = ".//Browser-Driver//geckodriver";
 	
 	public static final String IE_Property1 = "webdriver.ie.driver";
 	//for PC
@@ -19,9 +19,9 @@ public class Constants {
 	// No IEDriverServers for MACs ////
 	
 	//for PC
-	public static final String Path_TestData = ".\\src\\dataEngine\\DataEngine.xlsx";
+	//public static final String Path_TestData = ".\\src\\dataEngine\\DataEngine.xlsx";
 	//for MAC
-	//public static final String Path_TestData = ".//src//dataEngine//DataEngine.xlsx";
+	public static final String Path_TestData = ".//src//dataEngine//DataEngine.xlsx";
 	public static final String File_TestData = "DataEngine.xlsx";
 	
 
