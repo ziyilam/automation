@@ -32,16 +32,21 @@ public class ExcelUtils {
 	}
 
 	public static String getCellData(int RowNum, int ColNum, String SheetName) throws Exception {
-		ExcelWSheet = ExcelWBook.getSheet(SheetName);
+		
 		try {
+			String CellData = "Empty cell";
+			ExcelWSheet = ExcelWBook.getSheet(SheetName);
 			Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
-			String CellData = Cell.getStringCellValue();
+			if(!Cell.getStringCellValue().isEmpty()) {
+				CellData = Cell.getStringCellValue();
+			}
 			return CellData;
+			
 
 		} catch (Exception e) {
 			logger.warn("No Cell Data is found and return empty cell");
 
-			return "";
+			return "NULL";
 		}
 	}
 
@@ -118,8 +123,8 @@ public class ExcelUtils {
 			ExcelWBook.write(fileOut);
 			fileOut.close();
 			ExcelWBook = new XSSFWorkbook(new FileInputStream(Constants.Path_TestData));
-			logger.info("Test result: " + sResult + " written successfully on: " + sSheetName + " of "
-					+ Constants.File_TestData);
+			logger.info("Test result: " + sResult + "\n\n" + " written successfully on: "
+					+ Constants.File_TestData + " - " + sSheetName);
 		} catch (Exception e) {
 			logger.error("ExcelUtils|setCellData. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
