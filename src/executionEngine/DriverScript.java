@@ -76,6 +76,8 @@ public class DriverScript {
 				logger.info("1st TestStep at row: " + iStartTestStep);
 				iLastTestStep = ExcelUtils.getStepsCount(Constants.Sheet_TestSteps, sTestCaseID, iStartTestStep);
 				logger.info("Last TestStep at row: " + iLastTestStep);
+				
+				// if there is any testData for this testCase only calculate TestData total row
 				iStartTestData = ExcelUtils.getRowStartWith(sTestCaseID, Constants.Col_TestCaseID,
 						Constants.Sheet_TestData);
 				iLastTestData = ExcelUtils.getStepsCount(Constants.Sheet_TestData, sTestCaseID, iStartTestData);

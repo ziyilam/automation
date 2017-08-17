@@ -14,6 +14,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import executionEngine.DriverScript;
 
@@ -194,16 +195,39 @@ public class ActionKeywords {
 		}
 	}
 	
-	public void tryDragAndDrop(String sObjectLocator, String sActionKeyword, String sTestData) {
+	public void dragAndDrop(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
 			source = driver.findElement(By.xpath(sObjectLocator));
 			target = driver.findElement(By.xpath(sTestData));
 			(new Actions(driver)).dragAndDrop(source, target).perform();
 		} catch (Exception e) {
-			logger.error(" ActionKeywords|tryDragAndDrop. Exception Message - " + e.getMessage());
+			logger.error(" ActionKeywords|DragAndDrop. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 		
 	}
-
+	
+	public void selectDropDown(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			int iDropDownIndex = Integer.parseInt(sTestData);
+			(new Select(driver.findElement(By.xpath(sObjectLocator)))).selectByIndex(iDropDownIndex);
+			logger.info(" selecting dropdown item ");
+		} catch (NumberFormatException e) {
+			logger.error(" ActionKeywords|selectDropDown. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
+	
+	public void verifyURL(String sObjectLocator, String sActionKeyword, String sTestData) {
+		DriverScript.sCompareText = driver.getCurrentUrl();
+		if(DriverScript.sCompareText.equals(sObjectLocator)) {
+			logger.info("URL verified");
+			
+		}else {
+			DriverScript.bResult = false;
+			logger.info("URL is: " + DriverScript.sCompareText + " compared with expected: " + sObjectLocator);
+			logger.info("Text not the same");
+		}
+		
+	}
 }
