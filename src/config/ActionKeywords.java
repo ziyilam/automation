@@ -219,14 +219,19 @@ public class ActionKeywords {
 	}
 	
 	public void verifyURL(String sObjectLocator, String sActionKeyword, String sTestData) {
-		DriverScript.sCompareText = driver.getCurrentUrl();
-		if(DriverScript.sCompareText.equals(sObjectLocator)) {
-			logger.info("URL verified");
-			
-		}else {
+		try {
+			DriverScript.sCompareText = driver.getCurrentUrl();
+			if(DriverScript.sCompareText.equals(sObjectLocator)) {
+				logger.info("URL verified");
+				
+			}else {
+				DriverScript.bResult = false;
+				logger.info("URL is: " + DriverScript.sCompareText + " compared with expected: " + sObjectLocator);
+				logger.info("Text not the same");
+			}
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|verifyURL. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
-			logger.info("URL is: " + DriverScript.sCompareText + " compared with expected: " + sObjectLocator);
-			logger.info("Text not the same");
 		}
 		
 	}
