@@ -66,7 +66,9 @@ public class ExcelUtils {
 		int iRowNum = 0;
 		try {
 			int rowCount = ExcelUtils.getRowCount(SheetName);
+			logger.info(" rowCount: " + rowCount + " for Sheet: " + SheetName);
 			for (; iRowNum <= rowCount; iRowNum++) {
+				//logger.info("cellData: " + ExcelUtils.getCellData(iRowNum, colNum, SheetName));
 				if (ExcelUtils.getCellData(iRowNum, colNum, SheetName).equalsIgnoreCase(sTestCaseName)) {
 					break;
 				}
@@ -75,6 +77,7 @@ public class ExcelUtils {
 			logger.error("ExcelUtils|getRowContains. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
+		//logger.info("RowNum: " + iRowNum);
 		return iRowNum;
 	}
 
@@ -85,7 +88,7 @@ public class ExcelUtils {
 			for (; i <= rowCount; i++) {
 				if (!sTestCaseID.equalsIgnoreCase(ExcelUtils.getCellData(i, Constants.Col_TestCaseID, SheetName))) {
 					break;
-				}
+				} 
 			}
 		} catch (Exception e) {
 			logger.error("ExcelUtils|getTestStepsCount. Exception Message - " + e.getMessage());
