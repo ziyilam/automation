@@ -86,18 +86,10 @@ public class DriverScript {
 				logger.info("Last TestData at row: " + iLastTestData);
 
 				// Execute for sets of different test data
-				// when no testData this will be a problem
 				// if there is testData, loop testData, else run without test data
-				// iStartTestData > iLastTestData, run only one time
-				// run how many times = (iLastTestData - iStartTestData)
 				// at least run one time
-				int iCount = iLastTestData - iStartTestData;
-				logger.info("icount: " + iCount);
-				if(iCount < 0) {
-					iLastTestData = iStartTestData;
-					logger.info("1st TestData at row: " + iStartTestData);
-					logger.info("Last TestData at row: " + iLastTestData);
-				}
+				check_IfGotTestData(iStartTestData, iLastTestData);
+				
 				for (iCountTestData = iStartTestData; iCountTestData <= iLastTestData; iCountTestData++) {
 					
 					// every new set of test data the bResult is reset to true
@@ -158,7 +150,15 @@ public class DriverScript {
 	/*private static void check_TestCaseResult(Boolean bRsult, int iTcase) {
 		
 	}*/
-
+	private static void check_IfGotTestData(int iStart, int iLast) {
+		int iCount = iLastTestData - iStartTestData;
+		logger.info("icount: " + iCount);
+		if(iCount < 0) {
+			iLastTestData = iStartTestData;
+			logger.info("1st TestData at row: " + iStartTestData);
+			logger.info("Last TestData at row: " + iLastTestData);
+		}
+	}
 	private static void execute_Action() throws Exception {
 		Boolean bKeyword = false;
 		try {
