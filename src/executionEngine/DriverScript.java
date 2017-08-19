@@ -91,7 +91,13 @@ public class DriverScript {
 				// iStartTestData > iLastTestData, run only one time
 				// run how many times = (iLastTestData - iStartTestData)
 				// at least run one time
-				
+				int iCount = iLastTestData - iStartTestData;
+				logger.info("icount: " + iCount);
+				if(iCount < 0) {
+					iLastTestData = iStartTestData;
+					logger.info("1st TestData at row: " + iStartTestData);
+					logger.info("Last TestData at row: " + iLastTestData);
+				}
 				for (iCountTestData = iStartTestData; iCountTestData <= iLastTestData; iCountTestData++) {
 					
 					// every new set of test data the bResult is reset to true
