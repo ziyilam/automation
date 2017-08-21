@@ -235,4 +235,24 @@ public class ActionKeywords {
 		}
 		
 	}
+	
+	public void trySlide(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			source = driver.findElement(By.xpath(sObjectLocator));
+			/*target = driver.findElement(By.xpath(sTestData));
+			(new Actions(driver)).dragAndDrop(source, target).perform();*/
+			
+			int iXcoordinate = source.getLocation().getX();
+			int iYcoordinate = source.getLocation().getY();
+			logger.info("x1, y1: " + iXcoordinate + ", " + iYcoordinate);
+			
+			int iOffset = Integer.parseInt(sTestData);
+			int iXoffset = iXcoordinate + iOffset;
+			logger.info("x before offset, x after offset: " + iXcoordinate + ", " + iXoffset);
+			(new Actions(driver)).dragAndDropBy(source, iXoffset, iYcoordinate).perform();
+		} catch (NumberFormatException e) {
+			logger.error(" ActionKeywords|trySlide. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
 }
