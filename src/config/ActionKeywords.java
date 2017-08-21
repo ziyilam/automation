@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -239,8 +240,6 @@ public class ActionKeywords {
 	public void trySlide(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
 			source = driver.findElement(By.xpath(sObjectLocator));
-			/*target = driver.findElement(By.xpath(sTestData));
-			(new Actions(driver)).dragAndDrop(source, target).perform();*/
 			
 			int iXcoordinate = source.getLocation().getX();
 			int iYcoordinate = source.getLocation().getY();
@@ -252,6 +251,19 @@ public class ActionKeywords {
 			(new Actions(driver)).dragAndDropBy(source, iXoffset, iYcoordinate).perform();
 		} catch (NumberFormatException e) {
 			logger.error(" ActionKeywords|trySlide. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
+	
+	public void tryScroll(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			JavascriptExecutor js = (JavascriptExecutor)driver;
+			source = driver.findElement(By.xpath(sObjectLocator));
+			int iXcoordinate = source.getLocation().getX();
+			int iYcoordinate = source.getLocation().getY();
+			js.executeScript("window.scrollBy("+iXcoordinate+","+iYcoordinate+")","");
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|tryScroll. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
