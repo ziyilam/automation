@@ -300,7 +300,7 @@ public class ActionKeywords {
 	
 	public void waitUntil(String sObjectLocator, String sActionKeyword, String sTestData) {
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebDriverWait wait = new WebDriverWait(driver, 20);
 			switch(sTestData) {
 			case "clickable":
 				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(sObjectLocator)));
