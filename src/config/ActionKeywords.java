@@ -15,7 +15,10 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import executionEngine.DriverScript;
 
@@ -110,8 +113,35 @@ public class ActionKeywords {
 	public void tryVerify(String sObjectLocator, String sActionKeyword, String sTestData) {
 
 		try {
+			Boolean bNot=false;
 			logger.info("Action......Try Verify text");
 			DriverScript.sCompareText = driver.findElement(By.xpath(sObjectLocator)).getText();
+			String sInput = sTestData;
+			String[] aWords = sInput.split("\\s",2);
+			for(String w:aWords) {
+				logger.info("w: " + w);
+				if(w.equalsIgnoreCase("not")) {
+					bNot=true;
+					break;
+				}
+			}
+			if(bNot==false) {
+				if (DriverScript.sCompareText.equalsIgnoreCase(sTestData)) {
+					logger.info(DriverScript.sCompareText + " Text verified to be the same ");
+				} else {
+					DriverScript.bResult = false;
+					logger.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
+					logger.info("Text not the same");
+				}
+			} else {
+				if (!DriverScript.sCompareText.equalsIgnoreCase(aWords[1])) {
+					logger.info(DriverScript.sCompareText + " Text verified not the same ");
+				} else {
+					DriverScript.bResult = false;
+					logger.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + aWords[1]);
+				}
+			}
+			/*DriverScript.sCompareText = driver.findElement(By.xpath(sObjectLocator)).getText();
 			// if(DriverScript.sCompareText.equals(sTestData)){
 			if (DriverScript.sCompareText.equalsIgnoreCase(sTestData)) {
 				logger.info("Text verified");
@@ -119,7 +149,7 @@ public class ActionKeywords {
 				DriverScript.bResult = false;
 				logger.info("Text is: " + DriverScript.sCompareText + " compared with expected: " + sTestData);
 				logger.info("Text not the same");
-			}
+			}*/
 
 		} catch (Exception e) {
 			logger.error("TestStepID: " + DriverScript.sTestStepID + " ActionKeywords|tryVerify. Exception Message - " + e.getMessage());
@@ -264,6 +294,23 @@ public class ActionKeywords {
 			js.executeScript("window.scrollBy("+iXcoordinate+","+iYcoordinate+")","");
 		} catch (Exception e) {
 			logger.error(" ActionKeywords|tryScroll. Exception Message - " + e.getMessage());
+			DriverScript.bResult = false;
+		}
+	}
+	
+	public void waitUntil(String sObjectLocator, String sActionKeyword, String sTestData) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			switch(sTestData) {
+			case "clickable":
+				wait.until(ExpectedConditions.elementToBeClickable(By.xpath(sObjectLocator)));
+				break;
+			default:
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(sObjectLocator)));
+				break;
+			}
+		} catch (Exception e) {
+			logger.error(" ActionKeywords|waitUntil. Exception Message - " + e.getMessage());
 			DriverScript.bResult = false;
 		}
 	}
